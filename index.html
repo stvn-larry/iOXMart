@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IXMRT - Find Trusted iOS Device Engineers</title>
+    
+    <!-- GitHub Pages: https://crvstal.github.io/clientarch/ -->
+    
+    <!-- Production Dependencies -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+    <script src="https://unpkg.com/axios@1.6.0/dist/axios.min.js"></script>
+    
+    <style>
+        /* IXMRT Design System - iOS Inspired */
+        :root {
+            --ixmrt-primary: #007AFF;
+            --ixmrt-primary-dark: #0056CC;
+            --ixmrt-secondary: #5856D6;
+            --ixmrt-success: #34C759;
+            --ixmrt-warning: #FF9500;
+            --ixmrt-error: #FF3B30;
+            
+            --ixmrt-bg-primary: #FFFFFF;
+            --ixmrt-bg-secondary: #F2F2F7;
+            --ixmrt-bg-tertiary: #FFFFFF;
+            --ixmrt-bg-grouped: #F2F2F7;
+            
+            --ixmrt-text-primary: #000000;
+            --ixmrt-text-secondary: #3C3C43;
+            --ixmrt-text-tertiary: #8E8E93;
+            --ixmrt-text-quaternary: #C7C7CC;
+            
+            --ixmrt-separator: #C6C6C8;
+            --ixmrt-separator-opaque: #E5E5EA;
+            
+            --ixmrt-fill-primary: rgba(120, 120, 128, 0.2);
+            --ixmrt-fill-secondary: rgba(120, 120, 128, 0.16);
+            --ixmrt-fill-tertiary: rgba(118, 118, 128, 0.12);
+            
+            --solana-gradient: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+            --ixmrt-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --ixmrt-card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            background: var(--ixmrt-bg-grouped);
+            color: var(--ixmrt-text-primary);
+            line-height: 1.47;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        
+        /* iOS Navigation Bar */
+        .navigation-bar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 0.5px solid var(--ixmrt-separator);
+            padding: 44px 20px 12px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-content {
+            max-width: 375px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .nav-title {
+            font-size: 34px;
+            font-weight: 700;
+            color: var(--ixmrt-text-primary);
+            letter-spacing: -0.5px;
+        }
+        
+        .nav-subtitle {
+            font-size: 13px;
+            color: var(--ixmrt-text-secondary);
+            margin-top: 2px;
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .nav-button {
+            background: none;
+            border: none;
+            color: var(--ixmrt-primary);
+            font-size: 17px;
+            font-weight: 400;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        
+        .nav-button:hover {
+            background: var(--ixmrt-fill-secondary);
+        }
+        
+        .nav-button:active {
+            background: var(--ixmrt-fill-primary);
+            transform: scale(0.95);
+        }
+        
+        /* Main Container */
+        .app-container {
+            max-width: 375px;
+            margin: 0 auto;
+            background: var(--ixmrt-bg-primary);
+            min-height: calc(100vh - 80px);
+            position: relative;
+        }
+        
+        /* Location Banner */
+        .location-banner {
+            background: var(--solana-gradient);
+            color: white;
+            padding: 16px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .location-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 20"><defs><radialGradient id="a"><stop offset="20%" stop-color="%23fff" stop-opacity="0.1"/><stop offset="100%" stop-color="%23fff" stop-opacity="0"/></radialGradient></defs><circle cx="10" cy="10" r="10" fill="url(%23a)"/><circle cx="50" cy="5" r="5" fill="url(%23a)"/><circle cx="90" cy="15" r="8" fill="url(%23a)"/></svg>') repeat;
+            opacity: 0.3;
+            animation: shimmer 3s linear infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .location-text {
+            font-size: 15px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .location-subtext {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-top: 2px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Section Headers */
+        .section-header {
+            padding: 24px 20px 12px;
+            background: var(--ixmrt-bg-grouped);
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: var(--ixmrt-text-primary);
+            letter-spacing: -0.3px;
+        }
+        
+        .section-subtitle {
+            font-size: 15px;
+            color: var(--ixmrt-text-secondary);
+            margin-top: 2px;
+        }
+        
+        /* Card Components */
+        .card-grid {
+            padding: 0 20px 20px;
+            display: grid;
+            gap: 16px;
+        }
+        
+        .feature-card {
+            background: var(--ixmrt-bg-tertiary);
+            border-radius: 16px;
+            box-shadow: var(--ixmrt-card-shadow);
+            border: 0.5px solid var(--ixmrt-separator-opaque);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .feature-card:hover {
+            box-shadow: var(--ixmrt-card-shadow-hover);
+            transform: translateY(-2px);
+        }
+        
+        .feature-card:active {
+            transform: translateY(0);
+            box-shadow: var(--ixmrt-card-shadow);
+        }
+        
+        .feature-card.primary {
+            background: var(--solana-gradient);
+            color: white;
+            border: none;
+        }
+        
+        .card-content {
+            padding: 20px;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--ixmrt-fill-secondary);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card.primary .card-icon {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .card-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            letter-spacing: -0.2px;
+        }
+        
+        .card-description {
+            font-size: 15px;
+            color: var(--ixmrt-text-secondary);
+            line-height: 1.4;
+        }
+        
+        .feature-card.primary .card-description {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .card-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: var(--ixmrt-warning);
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Engineer Cards */
+        .engineer-card {
+            background: var(--ixmrt-bg-tertiary);
+            border-radius: 16px;
+            box-shadow: var(--ixmrt-card-shadow);
+            border: 0.5px solid var(--ixmrt-separator-opaque);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        
+        .engineer-card:hover {
+            box-shadow: var(--ixmrt-card-shadow-hover);
+            transform: translateY(-1px);
+        }
+        
+        .engineer-header {
+            padding: 16px;
+            border-bottom: 0.5px solid var(--ixmrt-separator-opaque);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .engineer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 25px;
+            background: var(--solana-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+        }
+        
+        .engineer-info {
+            flex: 1;
+        }
+        
+        .engineer-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ixmrt-text-primary);
+        }
+        
+        .engineer-business {
+            font-size: 15px;
+            color: var(--ixmrt-text-secondary);
+            margin-top: 1px;
+        }
+        
+        .engineer-rating {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+        }
+        
+        .rating-stars {
+            color: var(--ixmrt-warning);
+            font-size: 14px;
+        }
+        
+        .rating-text {
+            font-size: 13px;
+            color: var(--ixmrt-text-tertiary);
+        }
+        
+        .engineer-details {
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+        
+        .detail-item {
+            text-align: center;
+        }
+        
+        .detail-value {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ixmrt-text-primary);
+        }
+        
+        .detail-label {
+            font-size: 13px;
+            color: var(--ixmrt-text-tertiary);
+            margin-top: 2px;
+        }
+        
+        .engineer-badges {
+            padding: 16px;
+            border-top: 0.5px solid var(--ixmrt-separator-opaque);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .skill-badge {
+            background: var(--ixmrt-fill-secondary);
+            color: var(--ixmrt-text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            padding: 6px 10px;
+            border-radius: 16px;
+            border: 0.5px solid var(--ixmrt-separator);
+        }
+        
+        .verified-badge {
+            background: var(--ixmrt-success);
+            color: white;
+        }
+        
+        /* Testimonials */
+        .testimonial-card {
+            background: var(--ixmrt-bg-tertiary);
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: var(--ixmrt-card-shadow);
+            border: 0.5px solid var(--ixmrt-separator-opaque);
+            margin-bottom: 12px;
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .author-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 16px;
+            background: var(--ixmrt-fill-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ixmrt-text-secondary);
+        }
+        
+        .author-info {
+            flex: 1;
+        }
+        
+        .author-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--ixmrt-text-primary);
+        }
+        
+        .testimonial-date {
+            font-size: 13px;
+            color: var(--ixmrt-text-tertiary);
+        }
+        
+        .like-button {
+            background: none;
+            border: none;
+            color: var(--ixmrt-text-tertiary);
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .like-button:hover {
+            background: var(--ixmrt-fill-tertiary);
+        }
+        
+        .like-button.liked {
+            color: var(--ixmrt-error);
+        }
+        
+        .testimonial-text {
+            font-size: 15px;
+            color: var(--ixmrt-text-primary);
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+        
+        .testimonial-engineer {
+            font-size: 13px;
+            color: var(--ixmrt-text-secondary);
+            font-style: italic;
+        }
+        
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--ixmrt-text-tertiary);
+        }
+        
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        
+        .empty-title {
+            font-size: 17px;
+            font-weight: 600;
+            color: var(--ixmrt-text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .empty-message {
+            font-size: 15px;
+            line-height: 1.4;
+        }
+        
+        /* Loading States */
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+        
+        .loading-spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--ixmrt-fill-tertiary);
+            border-top-color: var(--ixmrt-primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 15px;
+            color: var(--ixmrt-text-secondary);
+        }
+        
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 17px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-primary {
+            background: var(--ixmrt-primary);
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: var(--ixmrt-primary-dark);
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+        
+        .btn-secondary {
+            background: var(--ixmrt-fill-secondary);
+            color: var(--ixmrt-text-primary);
+            border: 0.5px solid var(--ixmrt-separator);
+        }
+        
+        .btn-secondary:hover:not(:disabled) {
+            background: var(--ixmrt-fill-primary);
+        }
+        
+        .btn-success {
+            background: var(--ixmrt-success);
+            color: white;
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: var(--ixmrt-bg-tertiary);
+            border-radius: 20px;
+            max-width: 340px;
+            width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+        
+        .modal-overlay.show .modal-content {
+            transform: scale(1);
+        }
+        
+        .modal-header {
+            padding: 20px 20px 16px;
+            border-bottom: 0.5px solid var(--ixmrt-separator-opaque);
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--ixmrt-text-primary);
+            text-align: center;
+        }
+        
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+        
+        .modal-footer {
+            padding: 16px 20px;
+            border-top: 0.5px solid var(--ixmrt-separator-opaque);
+            display: flex;
+            gap: 12px;
+        }
+        
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3000;
+            pointer-events: none;
+        }
+        
+        .toast {
+            background: var(--ixmrt-bg-tertiary);
+            border: 0.5px solid var(--ixmrt-separator-opaque);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 16px 20px;
+            margin-bottom: 10px;
+            max-width: 300px;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .toast-success {
+            border-left: 4px solid var(--ixmrt-success);
+        }
+        
+        .toast-error {
+            border-left: 4px solid var(--ixmrt-error);
+        }
+        
+        .toast-warning {
+            border-left: 4px solid var(--ixmrt-warning);
+        }
+        
+        .toast-info {
+            border-left: 4px solid var(--ixmrt-primary);
+        }
+        
+        .toast-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        
+        .toast-text {
+            flex: 1;
+            font-size: 15px;
+            color: var(--ixmrt-text-primary);
+            line-height: 1.4;
+        }
+        
+        .toast-close {
+            background: none;
+            border: none;
+            color: var(--ixmrt-text-tertiary);
+            cursor: pointer;
+            font-size: 18px;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+        
+        .toast-close:hover {
+            background: var(--ixmrt-fill-tertiary);
+        }
+        
+        /* Responsive Design */
+        @media (min-width: 376px) {
+            .app-container {
+                max-width: 414px;
+            }
+            
+            .nav-content {
+                max-width: 414px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 768px;
+                padding: 0 40px;
+            }
+            
+            .nav-content {
+                max-width: 768px;
+            }
+            
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+                padding: 0 40px 40px;
+            }
+            
+            .testimonial-card,
+            .engineer-card {
+                margin-bottom: 16px;
+            }
+        }
+        
+        /* Animation Classes */
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.3s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- iOS Style Navigation Bar -->
+    <nav class="navigation-bar">
+        <div class="nav-content">
+            <div>
+                <h1 class="nav-title">IXMRT</h1>
+                <p class="nav-subtitle">iOS Device Engineers</p>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-button" onclick="showSettings()" title="Settings">
+                    ⚙️
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="app-container">
+        <!-- Location Banner -->
+        <div class="location-banner" onclick="showLocationPicker()">
+            <div class="location-text" id="current-location">Computer Village, Ikeja</div>
+            <div class="location-subtext">Tap to change location</div>
+        </div>
+        
+        <!-- Main Features Section -->
+        <div class="section-header">
+            <h2 class="section-title">Quick Services</h2>
+            <p class="section-subtitle">Find trusted engineers and swap devices</p>
+        </div>
+        
+        <div class="card-grid">
+            <!-- Find Engineer Card -->
+            <div class="feature-card primary" onclick="showNearestVendors()">
+                <div class="card-content">
+                    <div class="card-icon">🔧</div>
+                    <h3 class="card-title">Find Engineer</h3>
+                    <p class="card-description">Locate verified iOS device repair specialists near you</p>
+                </div>
+            </div>
+            
+            <!-- Swap Marketplace -->
+            <div class="feature-card" onclick="showSwapMarketplace()">
+                <div class="card-content">
+                    <div class="card-icon">🔄</div>
+                    <h3 class="card-title">Device Swap</h3>
+                    <p class="card-description">Trade devices with escrow protection</p>
+                    <div class="card-badge">Soon</div>
+                </div>
+            </div>
+            
+            <!-- Learn & Earn -->
+            <div class="feature-card" onclick="showApprenticeships()">
+                <div class="card-content">
+                    <div class="card-icon">🎓</div>
+                    <h3 class="card-title">Learn & Earn</h3>
+                    <p class="card-description">Join apprenticeship programs with guaranteed income</p>
+                </div>
+            </div>
+            
+            <!-- Testimonials -->
+            <div class="feature-card" onclick="showTestimonials()">
+                <div class="card-content">
+                    <div class="card-icon">⭐</div>
+                    <h3 class="card-title">Reviews</h3>
+                    <p class="card-description">Read experiences from other users</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Featured Engineers Section -->
+        <div class="section-header">
+            <h2 class="section-title">Top Engineers</h2>
+            <p class="section-subtitle">Highly rated specialists in your area</p>
+        </div>
+        
+        <div style="padding: 0 20px;">
+            <div id="engineers-container">
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Finding engineers near you...</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Recent Testimonials Section -->
+        <div class="section-header">
+            <h2 class="section-title">Community Reviews</h2>
+            <p class="section-subtitle">Real experiences from our users</p>
+        </div>
+        
+        <div style="padding: 0 20px 40px;">
+            <div id="testimonials-container">
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p class="loading-text">Loading testimonials...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+    
+    <!-- Location Picker Modal -->
+    <div id="location-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Select Your Location</h3>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; gap: 12px;">
+                    <button class="btn btn-secondary" onclick="selectLocation('computer-village', 'Computer Village, Ikeja')">
+                        Computer Village, Ikeja
+                    </button>
+                    <button class="btn btn-secondary" onclick="selectLocation('unilag', 'UNILAG Campus Area')">
+                        UNILAG Campus Area
+                    </button>
+                    <button class="btn btn-secondary" onclick="selectLocation('unical', 'UNICAL Campus Area')">
+                        UNICAL Campus Area
+                    </button>
+                    <button class="btn btn-secondary" onclick="selectLocation('uniben', 'UNIBEN Campus Area')">
+                        UNIBEN Campus Area
+                    </button>
+                    <button class="btn btn-secondary" onclick="selectLocation('caleb', 'Caleb University Area')">
+                        Caleb University Area
+                    </button>
+                    <button class="btn btn-secondary" onclick="selectLocation('uniabuja', 'University of Abuja Area')">
+                        University of Abuja Area
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('location-modal')" style="flex: 1;">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Engineer Details Modal -->
+    <div id="engineer-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="engineer-modal-title">Engineer Details</h3>
+            </div>
+            <div class="modal-body" id="engineer-modal-body">
+                <!-- Dynamic content populated here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('engineer-modal')" style="flex: 1;">
+                    Close
+                </button>
+                <button class="btn btn-primary" onclick="contactEngineer()" style="flex: 1;" id="contact-engineer-btn">
+                    Contact
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Settings</h3>
+            </div>
+            <div class="modal-body">
+                <div style="display: grid; gap: 16px;">
+                    <div style="padding: 16px; background: var(--ixmrt-fill-tertiary); border-radius: 12px;">
+                        <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-text-primary);">
+                            Account Status
+                        </div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary);">
+                            Currently browsing as guest
+                        </div>
+                        <button class="btn btn-primary" onclick="showComingSoon('User accounts')" style="margin-top: 12px; width: 100%;">
+                            Sign In - Coming Soon
+                        </button>
+                    </div>
+                    
+                    <div style="padding: 16px; border: 0.5px solid var(--ixmrt-separator); border-radius: 12px;">
+                        <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-text-primary);">
+                            Coming Soon Features
+                        </div>
+                        <div style="display: grid; gap: 8px; font-size: 15px; color: var(--ixmrt-text-secondary);">
+                            <div>• User-to-user device swaps</div>
+                            <div>• Advanced search filters</div>
+                            <div>• Push notifications</div>
+                            <div>• Favorite engineers</div>
+                            <div>• Repair history tracking</div>
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 16px; border: 0.5px solid var(--ixmrt-separator); border-radius: 12px;">
+                        <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-text-primary);">
+                            Blockchain Integration
+                        </div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary); margin-bottom: 12px;">
+                            Powered by Solana for secure escrow and governance
+                        </div>
+                        <button class="btn btn-secondary" onclick="showBlockchainInfo()" style="width: 100%;">
+                            Learn More
+                        </button>
+                    </div>
+                    
+                    <div style="padding: 16px; border: 0.5px solid var(--ixmrt-separator); border-radius: 12px;">
+                        <div style="font-size: 17px; font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-text-primary);">
+                            About IXMRT
+                        </div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary); line-height: 1.4;">
+                            Connecting Africans with reliable iOS device engineers through blockchain-secured apprenticeships and services.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('settings-modal')" style="flex: 1;">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== IXMRT CLIENT APP - ARCH 3 (PRODUCTION JAVASCRIPT) =====
+        
+        // Global Configuration
+        const CONFIG = {
+            // API Configuration - Replace with actual backend when ready
+            API: {
+                BASE_URL: 'https://api.ixmrt.com',
+                ENDPOINTS: {
+                    ENGINEERS: '/api/v1/engineers',
+                    TESTIMONIALS: '/api/v1/testimonials',
+                    LOCATIONS: '/api/v1/locations'
+                },
+                TIMEOUT: 15000,
+                RETRY_ATTEMPTS: 2
+            },
+            
+            // Solana Configuration
+            SOLANA: {
+                NETWORK: 'devnet',
+                RPC_ENDPOINT: 'https://api.devnet.solana.com'
+            },
+            
+            // Cache Configuration
+            CACHE: {
+                TTL: 10 * 60 * 1000, // 10 minutes
+                KEYS: {
+                    ENGINEERS: 'ixmrt_client_engineers',
+                    TESTIMONIALS: 'ixmrt_client_testimonials',
+                    LOCATION: 'ixmrt_client_location'
+                }
+            },
+            
+            // Default locations
+            LOCATIONS: {
+                'computer-village': 'Computer Village, Ikeja',
+                'unilag': 'UNILAG Campus Area',
+                'unical': 'UNICAL Campus Area',
+                'uniben': 'UNIBEN Campus Area',
+                'caleb': 'Caleb University Area',
+                'uniabuja': 'University of Abuja Area'
+            }
+        };
+        
+        // Application State
+        class ClientState {
+            constructor() {
+                this.currentLocation = 'computer-village';
+                this.engineers = [];
+                this.testimonials = [];
+                this.currentEngineer = null;
+                this.loading = {
+                    engineers: false,
+                    testimonials: false
+                };
+                this.cache = new Map();
+            }
+            
+            // Cache management
+            setCache(key, data, ttl = CONFIG.CACHE.TTL) {
+                this.cache.set(key, {
+                    data,
+                    timestamp: Date.now(),
+                    ttl
+                });
+                
+                // Also store in localStorage as backup
+                try {
+                    localStorage.setItem(key, JSON.stringify({
+                        data,
+                        timestamp: Date.now(),
+                        ttl
+                    }));
+                } catch (error) {
+                    console.warn('Failed to save to localStorage:', error);
+                }
+            }
+            
+            getCache(key) {
+                // Try memory cache first
+                let cached = this.cache.get(key);
+                
+                // Fallback to localStorage
+                if (!cached) {
+                    try {
+                        const stored = localStorage.getItem(key);
+                        if (stored) {
+                            cached = JSON.parse(stored);
+                            // Restore to memory cache
+                            this.cache.set(key, cached);
+                        }
+                    } catch (error) {
+                        console.warn('Failed to load from localStorage:', error);
+                        return null;
+                    }
+                }
+                
+                if (!cached) return null;
+                
+                // Check if expired
+                if (Date.now() - cached.timestamp > cached.ttl) {
+                    this.cache.delete(key);
+                    try {
+                        localStorage.removeItem(key);
+                    } catch (error) {
+                        console.warn('Failed to remove expired cache:', error);
+                    }
+                    return null;
+                }
+                
+                return cached.data;
+            }
+            
+            clearCache() {
+                this.cache.clear();
+                Object.values(CONFIG.CACHE.KEYS).forEach(key => {
+                    try {
+                        localStorage.removeItem(key);
+                    } catch (error) {
+                        console.warn('Failed to clear localStorage:', error);
+                    }
+                });
+            }
+        }
+        
+        // Initialize state
+        const state = new ClientState();
+        
+        // ===== API SERVICE =====
+        
+        class ApiService {
+            constructor() {
+                this.baseURL = CONFIG.API.BASE_URL;
+            }
+            
+            async makeRequest(endpoint, options = {}) {
+                // TODO: Replace with actual API calls when backend is ready
+                // For GitHub Pages demo, simulate API responses
+                return await this.simulateApiCall(endpoint, options);
+            }
+            
+            async simulateApiCall(endpoint, options) {
+                // Simulate network delay
+                await new Promise(resolve => setTimeout(resolve, Math.random() * 800 + 200));
+                
+                if (endpoint.includes('/engineers')) {
+                    return this.generateMockEngineers();
+                } else if (endpoint.includes('/testimonials')) {
+                    return this.generateMockTestimonials();
+                }
+                
+                return { success: true, data: [] };
+            }
+            
+            async fetchEngineers(location = 'computer-village') {
+                const endpoint = `${CONFIG.API.ENDPOINTS.ENGINEERS}?location=${location}&status=verified&limit=10`;
+                const response = await this.makeRequest(endpoint);
+                return response;
+            }
+            
+            async fetchTestimonials(limit = 5) {
+                const endpoint = `${CONFIG.API.ENDPOINTS.TESTIMONIALS}?limit=${limit}&sort=recent`;
+                const response = await this.makeRequest(endpoint);
+                return response;
+            }
+            
+            generateMockEngineers() {
+                const engineers = [
+                    {
+                        id: 'eng_001',
+                        name: 'Emeka Okafor',
+                        businessName: 'TechFix Pro Computer Village',
+                        location: 'computer-village',
+                        avatar: 'EO',
+                        rating: 4.9,
+                        reviewCount: 247,
+                        experienceYears: 8,
+                        successStreak: 342,
+                        specialties: ['iPhone Repairs', 'iPad Service', 'MacBook Pro'],
+                        services: ['Screen Replacement', 'Battery Service', 'Water Damage'],
+                        isVerified: true,
+                        response_time: '< 2 hours',
+                        phone: '+234 803 456 7890',
+                        description: 'Expert iOS device technician with 8+ years experience. Specializing in complex motherboard repairs and data recovery.',
+                        certifications: ['Apple Certified', 'Advanced Soldering']
+                    },
+                    {
+                        id: 'eng_002',
+                        name: 'Adaora Chukwu',
+                        businessName: 'iPhone Masters UNILAG',
+                        location: 'unilag',
+                        avatar: 'AC',
+                        rating: 4.8,
+                        reviewCount: 156,
+                        experienceYears: 5,
+                        successStreak: 189,
+                        specialties: ['iPhone Service', 'iPad Repairs'],
+                        services: ['Screen Repair', 'Camera Issues', 'Software Problems'],
+                        isVerified: true,
+                        response_time: '< 1 hour',
+                        phone: '+234 807 123 4567',
+                        description: 'University area specialist known for quick turnaround and student-friendly pricing.',
+                        certifications: ['iOS Specialist', 'Component Level Repair']
+                    },
+                    {
+                        id: 'eng_003',
+                        name: 'Ibrahim Hassan',
+                        businessName: 'Mobile Repair Hub',
+                        location: 'computer-village',
+                        avatar: 'IH',
+                        rating: 4.7,
+                        reviewCount: 203,
+                        experienceYears: 6,
+                        successStreak: 276,
+                        specialties: ['All iOS Devices', 'MacBooks'],
+                        services: ['Motherboard Repair', 'Data Recovery', 'Screen Replacement'],
+                        isVerified: true,
+                        response_time: '< 3 hours',
+                        phone: '+234 809 876 5432',
+                        description: 'Comprehensive repair services with emphasis on data preservation and quality parts.',
+                        certifications: ['Advanced Diagnostics', 'Micro Soldering']
+                    }
+                ];
+                
+                // Filter by current location
+                const filtered = engineers.filter(eng => 
+                    eng.location === state.currentLocation || state.currentLocation === 'all'
+                );
+                
+                return filtered.length > 0 ? filtered : engineers.slice(0, 2);
+            }
+            
+            generateMockTestimonials() {
+                const testimonials = [
+                    {
+                        id: 'test_001',
+                        author: 'Kemi O.',
+                        authorAvatar: 'KO',
+                        engineerName: 'Emeka Okafor - TechFix Pro',
+                        text: 'Amazing service! My iPhone 13 Pro had water damage and I thought it was gone forever. Emeka recovered all my photos and fixed it perfectly. Very professional and honest about the process.',
+                        rating: 5,
+                        likes: 23,
+                        isLiked: false,
+                        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+                        verified: true
+                    },
+                    {
+                        id: 'test_002',
+                        author: 'David A.',
+                        authorAvatar: 'DA',
+                        engineerName: 'Adaora Chukwu - iPhone Masters',
+                        text: 'Super quick repair right on campus! Screen replacement took only 30 minutes and looks brand new. Definitely recommend to all UNILAG students.',
+                        rating: 5,
+                        likes: 18,
+                        isLiked: false,
+                        createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+                        verified: true
+                    },
+                    {
+                        id: 'test_003',
+                        author: 'Sarah M.',
+                        authorAvatar: 'SM',
+                        engineerName: 'Ibrahim Hassan - Mobile Repair Hub',
+                        text: 'Had a complex motherboard issue with my MacBook Pro. Ibrahim diagnosed and fixed it when others said it was unrepairable. Excellent technical skills and fair pricing.',
+                        rating: 5,
+                        likes: 31,
+                        isLiked: false,
+                        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+                        verified: true
+                    },
+                    {
+                        id: 'test_004',
+                        author: 'Michael T.',
+                        authorAvatar: 'MT',
+                        engineerName: 'Emeka Okafor - TechFix Pro',
+                        text: 'Learning so much in the apprenticeship program! The escrow system gives peace of mind knowing my fees are protected. Great mentorship and hands-on experience.',
+                        rating: 5,
+                        likes: 27,
+                        isLiked: false,
+                        createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
+                        verified: true
+                    }
+                ];
+                
+                return testimonials;
+            }
+        }
+        
+        // Initialize API service
+        const apiService = new ApiService();
+        
+        // ===== UI MANAGEMENT =====
+        
+        async function initializeApp() {
+            try {
+                // Load saved location
+                const savedLocation = state.getCache(CONFIG.CACHE.KEYS.LOCATION);
+                if (savedLocation) {
+                    state.currentLocation = savedLocation.code;
+                    updateLocationDisplay(savedLocation.name);
+                }
+                
+                // Load cached data first for instant UI
+                loadCachedData();
+                
+                // Load fresh data
+                await Promise.allSettled([
+                    loadEngineers(),
+                    loadTestimonials()
+                ]);
+                
+                showToast('success', 'Welcome to IXMRT! Find trusted iOS engineers near you.');
+                
+            } catch (error) {
+                console.error('App initialization failed:', error);
+                showToast('error', 'Failed to initialize app. Please refresh the page.');
+                showErrorStates();
+            }
+        }
+        
+        function loadCachedData() {
+            // Load cached engineers
+            const cachedEngineers = state.getCache(CONFIG.CACHE.KEYS.ENGINEERS);
+            if (cachedEngineers) {
+                state.engineers = cachedEngineers;
+                displayEngineers();
+            }
+            
+            // Load cached testimonials
+            const cachedTestimonials = state.getCache(CONFIG.CACHE.KEYS.TESTIMONIALS);
+            if (cachedTestimonials) {
+                state.testimonials = cachedTestimonials;
+                displayTestimonials();
+            }
+        }
+        
+        async function loadEngineers() {
+            if (state.loading.engineers) return;
+            
+            state.loading.engineers = true;
+            
+            try {
+                const engineers = await apiService.fetchEngineers(state.currentLocation);
+                state.engineers = engineers;
+                state.setCache(CONFIG.CACHE.KEYS.ENGINEERS, engineers);
+                displayEngineers();
+                
+            } catch (error) {
+                console.error('Failed to load engineers:', error);
+                showToast('error', 'Failed to load engineers. Showing cached results.');
+                
+                if (state.engineers.length === 0) {
+                    showEngineerError();
+                }
+            } finally {
+                state.loading.engineers = false;
+            }
+        }
+        
+        async function loadTestimonials() {
+            if (state.loading.testimonials) return;
+            
+            state.loading.testimonials = true;
+            
+            try {
+                const testimonials = await apiService.fetchTestimonials();
+                state.testimonials = testimonials;
+                state.setCache(CONFIG.CACHE.KEYS.TESTIMONIALS, testimonials);
+                displayTestimonials();
+                
+            } catch (error) {
+                console.error('Failed to load testimonials:', error);
+                showToast('error', 'Failed to load testimonials. Showing cached results.');
+                
+                if (state.testimonials.length === 0) {
+                    showTestimonialError();
+                }
+            } finally {
+                state.loading.testimonials = false;
+            }
+        }
+        
+        function displayEngineers() {
+            const container = document.getElementById('engineers-container');
+            
+            if (state.engineers.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🔧</div>
+                        <h3 class="empty-title">No Engineers Found</h3>
+                        <p class="empty-message">No verified engineers in your area yet. Try a different location or check back later.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = state.engineers.map(engineer => `
+                <div class="engineer-card fade-in" onclick="showEngineerDetails('${engineer.id}')">
+                    <div class="engineer-header">
+                        <div class="engineer-avatar">${engineer.avatar}</div>
+                        <div class="engineer-info">
+                            <div class="engineer-name">${engineer.name}</div>
+                            <div class="engineer-business">${engineer.businessName}</div>
+                            <div class="engineer-rating">
+                                <span class="rating-stars">${generateStars(engineer.rating)}</span>
+                                <span class="rating-text">${engineer.rating} (${engineer.reviewCount} reviews)</span>
+                            </div>
+                        </div>
+                        ${engineer.isVerified ? '<div class="skill-badge verified-badge">Verified</div>' : ''}
+                    </div>
+                    
+                    <div class="engineer-details">
+                        <div class="detail-item">
+                            <div class="detail-value">${engineer.experienceYears} years</div>
+                            <div class="detail-label">Experience</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">${engineer.successStreak}</div>
+                            <div class="detail-label">Success Streak</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">${engineer.response_time}</div>
+                            <div class="detail-label">Response Time</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-value">${engineer.specialties.length} devices</div>
+                            <div class="detail-label">Specialties</div>
+                        </div>
+                    </div>
+                    
+                    <div class="engineer-badges">
+                        ${engineer.specialties.map(specialty => 
+                            `<span class="skill-badge">${specialty}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function displayTestimonials() {
+            const container = document.getElementById('testimonials-container');
+            
+            if (state.testimonials.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">⭐</div>
+                        <h3 class="empty-title">No Reviews Yet</h3>
+                        <p class="empty-message">Be the first to share your experience with our engineers.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = state.testimonials.map(testimonial => `
+                <div class="testimonial-card slide-up">
+                    <div class="testimonial-header">
+                        <div class="testimonial-author">
+                            <div class="author-avatar">${testimonial.authorAvatar}</div>
+                            <div class="author-info">
+                                <div class="author-name">${testimonial.author}</div>
+                                <div class="testimonial-date">${formatDate(testimonial.createdAt)}</div>
+                            </div>
+                        </div>
+                        <button class="like-button ${testimonial.isLiked ? 'liked' : ''}" 
+                                onclick="toggleLike('${testimonial.id}', event)">
+                            ${testimonial.isLiked ? '❤️' : '🤍'} ${testimonial.likes}
+                        </button>
+                    </div>
+                    
+                    <div class="testimonial-text">${testimonial.text}</div>
+                    
+                    <div class="testimonial-engineer">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <span class="rating-stars">${generateStars(testimonial.rating)}</span>
+                            <span>${testimonial.engineerName}</span>
+                            ${testimonial.verified ? '<span class="skill-badge verified-badge" style="font-size: 10px;">Verified</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // ===== FEATURE FUNCTIONS =====
+        
+        function showNearestVendors() {
+            const currentLocationName = CONFIG.LOCATIONS[state.currentLocation];
+            showToast('info', `Showing verified engineers near ${currentLocationName}`);
+            
+            // Scroll to engineers section with smooth animation
+            const engineersSection = document.getElementById('engineers-container').parentElement.parentElement;
+            engineersSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Add highlight effect
+            engineersSection.style.background = 'rgba(0, 122, 255, 0.05)';
+            engineersSection.style.borderRadius = '16px';
+            engineersSection.style.transition = 'all 0.3s ease';
+            
+            setTimeout(() => {
+                engineersSection.style.background = '';
+                engineersSection.style.borderRadius = '';
+            }, 2000);
+        }
+        
+        function showSwapMarketplace() {
+            showComingSoon('Device swap marketplace');
+        }
+        
+        function showApprenticeships() {
+            showModal('apprentice-info-modal');
+            
+            // Create modal content dynamically
+            const modalBody = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 48px; margin-bottom: 16px;">🎓</div>
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Learn & Earn Program</h3>
+                    <p style="color: var(--ixmrt-text-secondary);">Inspired by the traditional Igbo apprenticeship system</p>
+                </div>
+                
+                <div style="display: grid; gap: 16px; margin-bottom: 24px;">
+                    <div style="padding: 16px; background: var(--ixmrt-fill-tertiary); border-radius: 12px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-text-primary);">How It Works</div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary); line-height: 1.4;">
+                            Join verified engineers as apprentices. Your fees are held in blockchain escrow and accrue while you learn practical iOS repair skills.
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 16px; border: 2px solid var(--ixmrt-success); border-radius: 12px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-success);">Program Benefits</div>
+                        <div style="font-size: 14px; color: var(--ixmrt-text-secondary);">
+                            • Guaranteed income through escrow<br>
+                            • Hands-on training with experts<br>
+                            • University campus integration<br>
+                            • Blockchain-secured agreements<br>
+                            • Career placement assistance
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 16px; background: rgba(153, 69, 255, 0.1); border-radius: 12px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: #9945FF;">Blockchain Security</div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary); line-height: 1.4;">
+                            All agreements are secured by Solana smart contracts. Your funds are safe and earning while you learn.
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            showCustomModal('Apprenticeship Program', modalBody, [
+                {
+                    text: 'Learn More',
+                    class: 'btn-primary',
+                    action: () => {
+                        showToast('info', 'Apprenticeship enrollment opening soon at partner universities!');
+                        closeAllModals();
+                    }
+                },
+                {
+                    text: 'Close',
+                    class: 'btn-secondary',
+                    action: () => closeAllModals()
+                }
+            ]);
+        }
+        
+        function showTestimonials() {
+            const testimonialsSection = document.getElementById('testimonials-container').parentElement;
+            testimonialsSection.scrollIntoView({ behavior: 'smooth' });
+            
+            // Add highlight effect
+            testimonialsSection.style.background = 'rgba(255, 149, 0, 0.05)';
+            testimonialsSection.style.borderRadius = '16px';
+            testimonialsSection.style.transition = 'all 0.3s ease';
+            
+            setTimeout(() => {
+                testimonialsSection.style.background = '';
+                testimonialsSection.style.borderRadius = '';
+            }, 2000);
+        }
+        
+        function showEngineerDetails(engineerId) {
+            const engineer = state.engineers.find(e => e.id === engineerId);
+            if (!engineer) {
+                showToast('error', 'Engineer details not found');
+                return;
+            }
+            
+            state.currentEngineer = engineer;
+            
+            const modalBody = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div class="engineer-avatar" style="width: 80px; height: 80px; font-size: 32px; margin: 0 auto 16px;">${engineer.avatar}</div>
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 4px;">${engineer.name}</h3>
+                    <p style="color: var(--ixmrt-text-secondary); margin-bottom: 8px;">${engineer.businessName}</p>
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+                        <span class="rating-stars">${generateStars(engineer.rating)}</span>
+                        <span style="color: var(--ixmrt-text-secondary);">${engineer.rating} (${engineer.reviewCount} reviews)</span>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                    <div style="text-align: center; padding: 12px; background: var(--ixmrt-fill-tertiary); border-radius: 12px;">
+                        <div style="font-size: 20px; font-weight: 600; color: var(--ixmrt-text-primary);">${engineer.experienceYears}</div>
+                        <div style="font-size: 13px; color: var(--ixmrt-text-tertiary);">Years Experience</div>
+                    </div>
+                    <div style="text-align: center; padding: 12px; background: var(--ixmrt-fill-tertiary); border-radius: 12px;">
+                        <div style="font-size: 20px; font-weight: 600; color: var(--ixmrt-success);">${engineer.successStreak}</div>
+                        <div style="font-size: 13px; color: var(--ixmrt-text-tertiary);">Success Streak</div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--ixmrt-text-primary);">About</div>
+                    <div style="font-size: 15px; color: var(--ixmrt-text-secondary); line-height: 1.4; padding: 16px; background: var(--ixmrt-fill-tertiary); border-radius: 12px;">
+                        ${engineer.description}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--ixmrt-text-primary);">Specialties</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${engineer.specialties.map(specialty => 
+                            `<span class="skill-badge">${specialty}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--ixmrt-text-primary);">Services Offered</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${engineer.services.map(service => 
+                            `<span class="skill-badge" style="background: var(--ixmrt-primary); color: white;">${service}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                
+                ${engineer.certifications ? `
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; margin-bottom: 12px; color: var(--ixmrt-text-primary);">Certifications</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${engineer.certifications.map(cert => 
+                            `<span class="skill-badge verified-badge">${cert}</span>`
+                        ).join('')}
+                    </div>
+                </div>
+                ` : ''}
+                
+                <div style="padding: 16px; background: rgba(0, 122, 255, 0.1); border-radius: 12px; border: 2px solid var(--ixmrt-primary);">
+                    <div style="font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-primary);">Response Time</div>
+                    <div style="font-size: 15px; color: var(--ixmrt-text-secondary);">
+                        Typically responds ${engineer.response_time}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('engineer-modal-title').textContent = engineer.name;
+            document.getElementById('engineer-modal-body').innerHTML = modalBody;
+            
+            showModal('engineer-modal');
+        }
+        
+        function contactEngineer() {
+            if (!state.currentEngineer) return;
+            
+            const engineer = state.currentEngineer;
+            const phoneNumber = engineer.phone;
+            const message = `Hi ${engineer.name}, I found you through IXMRT and I'm interested in your iOS repair services. Could you please help me with my device?`;
+            
+            // Create WhatsApp link (most common in Nigeria)
+            const whatsappNumber = phoneNumber.replace(/\D/g, ''); // Remove non-digits
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+            
+            showToast('success', `Connecting you with ${engineer.name} via WhatsApp`);
+            closeModal('engineer-modal');
+        }
+        
+        function showLocationPicker() {
+            showModal('location-modal');
+        }
+        
+        function selectLocation(code, name) {
+            state.currentLocation = code;
+            updateLocationDisplay(name);
+            
+            // Cache the selection
+            state.setCache(CONFIG.CACHE.KEYS.LOCATION, { code, name });
+            
+            closeModal('location-modal');
+            showToast('info', `Location changed to ${name}`);
+            
+            // Reload engineers for new location
+            loadEngineers();
+        }
+        
+        function updateLocationDisplay(name) {
+            document.getElementById('current-location').textContent = name;
+        }
+        
+        function showSettings() {
+            showModal('settings-modal');
+        }
+        
+        function showComingSoon(feature) {
+            showToast('info', `${feature} coming soon! Stay tuned for updates.`);
+        }
+        
+        function showBlockchainInfo() {
+            const modalBody = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="background: var(--solana-gradient); width: 80px; height: 80px; border-radius: 40px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: white; font-size: 32px;">⚡</div>
+                    <h3 style="font-size: 20px; font-weight: 600; margin-bottom: 8px;">Powered by Solana</h3>
+                    <p style="color: var(--ixmrt-text-secondary);">Fast, secure, and low-cost blockchain infrastructure</p>
+                </div>
+                
+                <div style="display: grid; gap: 16px;">
+                    <div style="padding: 16px; background: var(--ixmrt-fill-tertiary); border-radius: 12px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-text-primary);">🔒 Escrow Security</div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary); line-height: 1.4;">
+                            All apprenticeship fees and swap transactions are secured by smart contracts. Your funds are protected and earning while locked.
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 16px; background: var(--ixmrt-fill-tertiary); border-radius: 12px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-text-primary);">⚡ Fast Transactions</div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary); line-height: 1.4;">
+                            Solana's high-speed network ensures instant confirmation of payments and contract executions.
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 16px; background: var(--ixmrt-fill-tertiary); border-radius: 12px;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: var(--ixmrt-text-primary);">💰 Low Fees</div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary); line-height: 1.4;">
+                            Transaction costs are minimal compared to traditional payment processors, keeping more value in your pocket.
+                        </div>
+                    </div>
+                    
+                    <div style="padding: 16px; background: rgba(153, 69, 255, 0.1); border-radius: 12px; border: 2px solid #9945FF;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: #9945FF;">🏛️ Governance</div>
+                        <div style="font-size: 15px; color: var(--ixmrt-text-secondary); line-height: 1.4;">
+                            Community-driven decision making ensures fair dispute resolution and platform improvements.
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            showCustomModal('Blockchain Integration', modalBody, [
+                {
+                    text: 'Learn More About Solana',
+                    class: 'btn-primary',
+                    action: () => {
+                        window.open('https://solana.com', '_blank');
+                        closeAllModals();
+                    }
+                },
+                {
+                    text: 'Close',
+                    class: 'btn-secondary', 
+                    action: () => closeAllModals()
+                }
+            ]);
+        }
+        
+        async function toggleLike(testimonialId, event) {
+            event.stopPropagation();
+            
+            const testimonial = state.testimonials.find(t => t.id === testimonialId);
+            if (!testimonial) return;
+            
+            // Toggle like status
+            if (testimonial.isLiked) {
+                testimonial.likes--;
+                testimonial.isLiked = false;
+            } else {
+                testimonial.likes++;
+                testimonial.isLiked = true;
+            }
+            
+            // Update cache
+            state.setCache(CONFIG.CACHE.KEYS.TESTIMONIALS, state.testimonials);
+            
+            // Update UI
+            const button = event.target;
+            button.textContent = `${testimonial.isLiked ? '❤️' : '🤍'} ${testimonial.likes}`;
+            button.className = `like-button ${testimonial.isLiked ? 'liked' : ''}`;
+            
+            // TODO: Send like update to backend
+            // await apiService.updateTestimonialLike(testimonialId, testimonial.isLiked);
+        }
+        
+        // ===== UTILITY FUNCTIONS =====
+        
+        function generateStars(rating) {
+            const fullStars = Math.floor(rating);
+            const hasHalfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+            
+            return '★'.repeat(fullStars) + 
+                   (hasHalfStar ? '☆' : '') + 
+                   '☆'.repeat(emptyStars);
+        }
+        
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const now = new Date();
+            const diffTime = Math.abs(now - date);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            
+            if (diffDays === 1) return 'Yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            });
+        }
+        
+        function showModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+        
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+            }
+        }
+        
+        function closeAllModals() {
+            const modals = document.querySelectorAll('.modal-overlay');
+            modals.forEach(modal => {
+                modal.classList.remove('show');
+            });
+            document.body.style.overflow = 'auto';
+        }
+        
+        function showCustomModal(title, body, actions = []) {
+            // Create modal dynamically
+            const modalId = 'custom-modal-' + Date.now();
+            const modal = document.createElement('div');
+            modal.id = modalId;
+            modal.className = 'modal-overlay';
+            
+            const actionsHtml = actions.map(action => 
+                `<button class="btn ${action.class}" onclick="(${action.action.toString()})()">${action.text}</button>`
+            ).join('');
+            
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">${title}</h3>
+                    </div>
+                    <div class="modal-body">
+                        ${body}
+                    </div>
+                    ${actions.length > 0 ? `
+                    <div class="modal-footer">
+                        ${actionsHtml}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            showModal(modalId);
+            
+            // Auto cleanup after close
+            setTimeout(() => {
+                if (!modal.classList.contains('show')) {
+                    modal.remove();
+                }
+            }, 1000);
+        }
+        
+        function showToast(type, message, duration = 4000) {
+            const toastContainer = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <div class="toast-content">
+                    <div class="toast-text">${message}</div>
+                    <button class="toast-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            // Animate in
+            setTimeout(() => toast.classList.add('show'), 100);
+            
+            // Auto remove
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }
+            }, duration);
+        }
+        
+        function showEngineerError() {
+            const container = document.getElementById('engineers-container');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">⚠️</div>
+                    <h3 class="empty-title">Unable to Load Engineers</h3>
+                    <p class="empty-message">Please check your connection and try again.</p>
+                    <button class="btn btn-primary" onclick="loadEngineers()" style="margin-top: 16px;">
+                        Retry
+                    </button>
+                </div>
+            `;
+        }
+        
+        function showTestimonialError() {
+            const container = document.getElementById('testimonials-container');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">⚠️</div>
+                    <h3 class="empty-title">Unable to Load Testimonials</h3>
+                    <p class="empty-message">Please check your connection and try again.</p>
+                    <button class="btn btn-primary" onclick="loadTestimonials()" style="margin-top: 16px;">
+                        Retry
+                    </button>
+                </div>
+            `;
+        }
+        
+        function showErrorStates() {
+            showEngineerError();
+            showTestimonialError();
+        }
+        
+        // ===== EVENT LISTENERS =====
+        
+        // Close modals when clicking outside
+        document.addEventListener('click', function(event) {
+            const modals = document.querySelectorAll('.modal-overlay.show');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+        
+        // Handle back button for modals
+        window.addEventListener('popstate', function(event) {
+            closeAllModals();
+        });
+        
+        // Handle online/offline status
+        window.addEventListener('online', function() {
+            showToast('success', 'Connection restored');
+            // Reload data when back online
+            setTimeout(() => {
+                Promise.allSettled([loadEngineers(), loadTestimonials()]);
+            }, 1000);
+        });
+        
+        window.addEventListener('offline', function() {
+            showToast('warning', 'You are offline. Showing cached content.');
+        });
+        
+        // Handle navigation bar scroll effects
+        let lastScrollY = window.scrollY;
+        window.addEventListener('scroll', function() {
+            const navBar = document.querySelector('.navigation-bar');
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY > 20) {
+                navBar.style.background = 'rgba(255, 255, 255, 0.95)';
+                navBar.style.borderBottom = '0.5px solid rgba(198, 198, 200, 0.3)';
+            } else {
+                navBar.style.background = 'rgba(255, 255, 255, 0.9)';
+                navBar.style.borderBottom = '0.5px solid var(--ixmrt-separator)';
+            }
+            
+            lastScrollY = currentScrollY;
+        });
+        
+        // ===== INITIALIZATION =====
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
+        });
+        
+        // Export functions for external integration
+        window.IXMRTClient = {
+            // State
+            state,
+            
+            // Services  
+            apiService,
+            
+            // Core functions
+            showNearestVendors,
+            showSwapMarketplace,
+            showApprenticeships,
+            showTestimonials,
+            showEngineerDetails,
+            selectLocation,
+            
+            // Data management
+            loadEngineers,
+            loadTestimonials,
+            
+            // Utility functions
+            showToast,
+            showModal,
+            closeModal,
+            formatDate,
+            generateStars,
+            
+            // Configuration
+            CONFIG
+        };
+        
+        // Onboard functionality for new users
+        function startOnboarding() {
+            const onboardSteps = [
+                {
+                    title: 'Welcome to IXMRT',
+                    content: 'Find trusted iOS device engineers across Nigeria with blockchain-secured transactions.',
+                    action: 'Next'
+                },
+                {
+                    title: 'Choose Your Location',
+                    content: 'Select your campus or area to find engineers near you. We start with major universities and tech hubs.',
+                    action: 'Got it'
+                },
+                {
+                    title: 'Secure & Trusted',
+                    content: 'All engineers are verified and apprenticeships are secured by Solana smart contracts for your protection.',
+                    action: 'Start Exploring'
+                }
+            ];
+            
+            let currentStep = 0;
+            
+            function showOnboardStep(step) {
+                const stepData = onboardSteps[step];
+                
+                showCustomModal(stepData.title, `
+                    <div style="text-align: center;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">
+                            ${step === 0 ? '👋' : step === 1 ? '📍' : '🔒'}
+                        </div>
+                        <p style="font-size: 16px; line-height: 1.5; color: var(--ixmrt-text-secondary);">
+                            ${stepData.content}
+                        </p>
+                        <div style="margin-top: 20px; font-size: 14px; color: var(--ixmrt-text-tertiary);">
+                            Step ${step + 1} of ${onboardSteps.length}
+                        </div>
+                    </div>
+                `, [
+                    {
+                        text: stepData.action,
+                        class: 'btn-primary',
+                        action: () => {
+                            closeAllModals();
+                            if (step < onboardSteps.length - 1) {
+                                setTimeout(() => showOnboardStep(step + 1), 300);
+                            } else {
+                                // Mark onboarding as complete
+                                localStorage.setItem('ixmrt_onboarded', 'true');
+                            }
+                        }
+                    }
+                ]);
+            }
+            
+            // Check if user has been onboarded
+            const hasOnboarded = localStorage.getItem('ixmrt_onboarded');
+            if (!hasOnboarded) {
+                setTimeout(() => showOnboardStep(0), 2000);
+            }
+        }
+        
+        // Start onboarding for new users
+        setTimeout(startOnboarding, 3000);
+    </script>
+</body>
+</html>
+                    

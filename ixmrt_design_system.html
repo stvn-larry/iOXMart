@@ -1,0 +1,1472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IXMRT Design System & Component Library</title>
+    <style>
+        /* ===== IXMRT DESIGN SYSTEM - CSS COMPONENT LIBRARY ===== */
+        
+        /* === DESIGN TOKENS === */
+        :root {
+            /* Primary Colors */
+            --ixmrt-primary-50: #f0f4ff;
+            --ixmrt-primary-100: #e0e7ff;
+            --ixmrt-primary-200: #c7d2fe;
+            --ixmrt-primary-300: #a5b4fc;
+            --ixmrt-primary-400: #818cf8;
+            --ixmrt-primary-500: #667eea;
+            --ixmrt-primary-600: #5a67d8;
+            --ixmrt-primary-700: #4c51bf;
+            --ixmrt-primary-800: #434190;
+            --ixmrt-primary-900: #3c366b;
+            --ixmrt-primary-950: #252142;
+            
+            /* Secondary Colors */
+            --ixmrt-secondary-50: #faf5ff;
+            --ixmrt-secondary-100: #f3e8ff;
+            --ixmrt-secondary-200: #e9d5ff;
+            --ixmrt-secondary-300: #d8b4fe;
+            --ixmrt-secondary-400: #c084fc;
+            --ixmrt-secondary-500: #a855f7;
+            --ixmrt-secondary-600: #9333ea;
+            --ixmrt-secondary-700: #7c3aed;
+            --ixmrt-secondary-800: #6b21a8;
+            --ixmrt-secondary-900: #581c87;
+            --ixmrt-secondary-950: #3b0764;
+            
+            /* Success Colors */
+            --ixmrt-success-50: #ecfdf5;
+            --ixmrt-success-100: #d1fae5;
+            --ixmrt-success-200: #a7f3d0;
+            --ixmrt-success-300: #6ee7b7;
+            --ixmrt-success-400: #34d399;
+            --ixmrt-success-500: #10b981;
+            --ixmrt-success-600: #059669;
+            --ixmrt-success-700: #047857;
+            --ixmrt-success-800: #065f46;
+            --ixmrt-success-900: #064e3b;
+            
+            /* Warning Colors */
+            --ixmrt-warning-50: #fffbeb;
+            --ixmrt-warning-100: #fef3c7;
+            --ixmrt-warning-200: #fde68a;
+            --ixmrt-warning-300: #fcd34d;
+            --ixmrt-warning-400: #fbbf24;
+            --ixmrt-warning-500: #f59e0b;
+            --ixmrt-warning-600: #d97706;
+            --ixmrt-warning-700: #b45309;
+            --ixmrt-warning-800: #92400e;
+            --ixmrt-warning-900: #78350f;
+            
+            /* Error Colors */
+            --ixmrt-error-50: #fef2f2;
+            --ixmrt-error-100: #fee2e2;
+            --ixmrt-error-200: #fecaca;
+            --ixmrt-error-300: #fca5a5;
+            --ixmrt-error-400: #f87171;
+            --ixmrt-error-500: #ef4444;
+            --ixmrt-error-600: #dc2626;
+            --ixmrt-error-700: #b91c1c;
+            --ixmrt-error-800: #991b1b;
+            --ixmrt-error-900: #7f1d1d;
+            
+            /* Neutral Colors */
+            --ixmrt-gray-50: #f9fafb;
+            --ixmrt-gray-100: #f3f4f6;
+            --ixmrt-gray-200: #e5e7eb;
+            --ixmrt-gray-300: #d1d5db;
+            --ixmrt-gray-400: #9ca3af;
+            --ixmrt-gray-500: #6b7280;
+            --ixmrt-gray-600: #4b5563;
+            --ixmrt-gray-700: #374151;
+            --ixmrt-gray-800: #1f2937;
+            --ixmrt-gray-900: #111827;
+            --ixmrt-gray-950: #030712;
+            
+            /* Typography */
+            --ixmrt-font-family-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --ixmrt-font-family-mono: 'SF Mono', Monaco, 'Cascadia Code', 'Roboto Mono', Consolas, 'Courier New', monospace;
+            
+            /* Font Sizes */
+            --ixmrt-text-xs: 0.75rem;      /* 12px */
+            --ixmrt-text-sm: 0.875rem;     /* 14px */
+            --ixmrt-text-base: 1rem;       /* 16px */
+            --ixmrt-text-lg: 1.125rem;     /* 18px */
+            --ixmrt-text-xl: 1.25rem;      /* 20px */
+            --ixmrt-text-2xl: 1.5rem;      /* 24px */
+            --ixmrt-text-3xl: 1.875rem;    /* 30px */
+            --ixmrt-text-4xl: 2.25rem;     /* 36px */
+            --ixmrt-text-5xl: 3rem;        /* 48px */
+            --ixmrt-text-6xl: 3.75rem;     /* 60px */
+            
+            /* Line Heights */
+            --ixmrt-leading-none: 1;
+            --ixmrt-leading-tight: 1.25;
+            --ixmrt-leading-snug: 1.375;
+            --ixmrt-leading-normal: 1.5;
+            --ixmrt-leading-relaxed: 1.625;
+            --ixmrt-leading-loose: 2;
+            
+            /* Font Weights */
+            --ixmrt-font-light: 300;
+            --ixmrt-font-normal: 400;
+            --ixmrt-font-medium: 500;
+            --ixmrt-font-semibold: 600;
+            --ixmrt-font-bold: 700;
+            --ixmrt-font-extrabold: 800;
+            --ixmrt-font-black: 900;
+            
+            /* Spacing Scale */
+            --ixmrt-space-0: 0;
+            --ixmrt-space-1: 0.25rem;      /* 4px */
+            --ixmrt-space-2: 0.5rem;       /* 8px */
+            --ixmrt-space-3: 0.75rem;      /* 12px */
+            --ixmrt-space-4: 1rem;         /* 16px */
+            --ixmrt-space-5: 1.25rem;      /* 20px */
+            --ixmrt-space-6: 1.5rem;       /* 24px */
+            --ixmrt-space-8: 2rem;         /* 32px */
+            --ixmrt-space-10: 2.5rem;      /* 40px */
+            --ixmrt-space-12: 3rem;        /* 48px */
+            --ixmrt-space-16: 4rem;        /* 64px */
+            --ixmrt-space-20: 5rem;        /* 80px */
+            --ixmrt-space-24: 6rem;        /* 96px */
+            
+            /* Border Radius */
+            --ixmrt-rounded-none: 0;
+            --ixmrt-rounded-sm: 0.125rem;   /* 2px */
+            --ixmrt-rounded: 0.25rem;       /* 4px */
+            --ixmrt-rounded-md: 0.375rem;   /* 6px */
+            --ixmrt-rounded-lg: 0.5rem;     /* 8px */
+            --ixmrt-rounded-xl: 0.75rem;    /* 12px */
+            --ixmrt-rounded-2xl: 1rem;      /* 16px */
+            --ixmrt-rounded-3xl: 1.5rem;    /* 24px */
+            --ixmrt-rounded-full: 9999px;
+            
+            /* Shadows */
+            --ixmrt-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --ixmrt-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --ixmrt-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --ixmrt-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --ixmrt-shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            --ixmrt-shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+            --ixmrt-shadow-inner: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+            
+            /* Transitions */
+            --ixmrt-transition-all: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --ixmrt-transition-colors: color 150ms cubic-bezier(0.4, 0, 0.2, 1), background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --ixmrt-transition-transform: transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --ixmrt-transition-opacity: opacity 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            
+            /* Z-Index Scale */
+            --ixmrt-z-0: 0;
+            --ixmrt-z-10: 10;
+            --ixmrt-z-20: 20;
+            --ixmrt-z-30: 30;
+            --ixmrt-z-40: 40;
+            --ixmrt-z-50: 50;
+            --ixmrt-z-modal: 1000;
+            --ixmrt-z-popover: 1010;
+            --ixmrt-z-overlay: 1020;
+            --ixmrt-z-max: 9999;
+            
+            /* Solana Brand Colors */
+            --solana-purple: #9945FF;
+            --solana-green: #14F195;
+            --solana-gradient: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+        }
+        
+        /* === RESET & BASE STYLES === */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            line-height: var(--ixmrt-leading-normal);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body {
+            font-family: var(--ixmrt-font-family-sans);
+            font-size: var(--ixmrt-text-base);
+            color: var(--ixmrt-gray-900);
+            background-color: var(--ixmrt-gray-50);
+            line-height: var(--ixmrt-leading-normal);
+        }
+        
+        /* === TYPOGRAPHY COMPONENTS === */
+        .ixmrt-heading-1 {
+            font-size: var(--ixmrt-text-5xl);
+            font-weight: var(--ixmrt-font-bold);
+            line-height: var(--ixmrt-leading-tight);
+            color: var(--ixmrt-gray-900);
+            margin-bottom: var(--ixmrt-space-6);
+        }
+        
+        .ixmrt-heading-2 {
+            font-size: var(--ixmrt-text-4xl);
+            font-weight: var(--ixmrt-font-bold);
+            line-height: var(--ixmrt-leading-tight);
+            color: var(--ixmrt-gray-900);
+            margin-bottom: var(--ixmrt-space-5);
+        }
+        
+        .ixmrt-heading-3 {
+            font-size: var(--ixmrt-text-3xl);
+            font-weight: var(--ixmrt-font-semibold);
+            line-height: var(--ixmrt-leading-tight);
+            color: var(--ixmrt-gray-900);
+            margin-bottom: var(--ixmrt-space-4);
+        }
+        
+        .ixmrt-heading-4 {
+            font-size: var(--ixmrt-text-2xl);
+            font-weight: var(--ixmrt-font-semibold);
+            line-height: var(--ixmrt-leading-snug);
+            color: var(--ixmrt-gray-900);
+            margin-bottom: var(--ixmrt-space-3);
+        }
+        
+        .ixmrt-body-large {
+            font-size: var(--ixmrt-text-lg);
+            line-height: var(--ixmrt-leading-relaxed);
+            color: var(--ixmrt-gray-700);
+        }
+        
+        .ixmrt-body {
+            font-size: var(--ixmrt-text-base);
+            line-height: var(--ixmrt-leading-normal);
+            color: var(--ixmrt-gray-700);
+        }
+        
+        .ixmrt-body-small {
+            font-size: var(--ixmrt-text-sm);
+            line-height: var(--ixmrt-leading-normal);
+            color: var(--ixmrt-gray-600);
+        }
+        
+        .ixmrt-caption {
+            font-size: var(--ixmrt-text-xs);
+            line-height: var(--ixmrt-leading-normal);
+            color: var(--ixmrt-gray-500);
+        }
+        
+        /* === BUTTON COMPONENTS === */
+        .ixmrt-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--ixmrt-space-2);
+            border: none;
+            border-radius: var(--ixmrt-rounded-lg);
+            font-family: inherit;
+            font-weight: var(--ixmrt-font-medium);
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--ixmrt-transition-all);
+            outline: none;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ixmrt-btn:focus {
+            outline: 2px solid var(--ixmrt-primary-500);
+            outline-offset: 2px;
+        }
+        
+        .ixmrt-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Button Sizes */
+        .ixmrt-btn-sm {
+            padding: var(--ixmrt-space-2) var(--ixmrt-space-3);
+            font-size: var(--ixmrt-text-sm);
+            min-height: 2rem;
+        }
+        
+        .ixmrt-btn-md {
+            padding: var(--ixmrt-space-3) var(--ixmrt-space-4);
+            font-size: var(--ixmrt-text-base);
+            min-height: 2.5rem;
+        }
+        
+        .ixmrt-btn-lg {
+            padding: var(--ixmrt-space-4) var(--ixmrt-space-6);
+            font-size: var(--ixmrt-text-lg);
+            min-height: 3rem;
+        }
+        
+        .ixmrt-btn-xl {
+            padding: var(--ixmrt-space-5) var(--ixmrt-space-8);
+            font-size: var(--ixmrt-text-xl);
+            min-height: 3.5rem;
+        }
+        
+        /* Button Variants */
+        .ixmrt-btn-primary {
+            background: var(--ixmrt-primary-600);
+            color: white;
+        }
+        
+        .ixmrt-btn-primary:hover {
+            background: var(--ixmrt-primary-700);
+            transform: translateY(-1px);
+            box-shadow: var(--ixmrt-shadow-md);
+        }
+        
+        .ixmrt-btn-primary:active {
+            background: var(--ixmrt-primary-800);
+            transform: translateY(0);
+        }
+        
+        .ixmrt-btn-secondary {
+            background: var(--ixmrt-gray-100);
+            color: var(--ixmrt-gray-700);
+            border: 1px solid var(--ixmrt-gray-300);
+        }
+        
+        .ixmrt-btn-secondary:hover {
+            background: var(--ixmrt-gray-200);
+            border-color: var(--ixmrt-gray-400);
+        }
+        
+        .ixmrt-btn-success {
+            background: var(--ixmrt-success-600);
+            color: white;
+        }
+        
+        .ixmrt-btn-success:hover {
+            background: var(--ixmrt-success-700);
+            transform: translateY(-1px);
+            box-shadow: var(--ixmrt-shadow-md);
+        }
+        
+        .ixmrt-btn-danger {
+            background: var(--ixmrt-error-600);
+            color: white;
+        }
+        
+        .ixmrt-btn-danger:hover {
+            background: var(--ixmrt-error-700);
+            transform: translateY(-1px);
+            box-shadow: var(--ixmrt-shadow-md);
+        }
+        
+        .ixmrt-btn-outline {
+            background: transparent;
+            color: var(--ixmrt-primary-600);
+            border: 2px solid var(--ixmrt-primary-600);
+        }
+        
+        .ixmrt-btn-outline:hover {
+            background: var(--ixmrt-primary-600);
+            color: white;
+        }
+        
+        .ixmrt-btn-ghost {
+            background: transparent;
+            color: var(--ixmrt-gray-700);
+        }
+        
+        .ixmrt-btn-ghost:hover {
+            background: var(--ixmrt-gray-100);
+        }
+        
+        /* Solana Pay Button */
+        .ixmrt-btn-solana {
+            background: var(--solana-gradient);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ixmrt-btn-solana:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--ixmrt-shadow-lg);
+        }
+        
+        .ixmrt-btn-solana:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .ixmrt-btn-solana:hover:before {
+            left: 100%;
+        }
+        
+        .ixmrt-btn-full {
+            width: 100%;
+        }
+        
+        /* === CARD COMPONENTS === */
+        .ixmrt-card {
+            background: white;
+            border-radius: var(--ixmrt-rounded-xl);
+            box-shadow: var(--ixmrt-shadow-sm);
+            border: 1px solid var(--ixmrt-gray-200);
+            overflow: hidden;
+            transition: var(--ixmrt-transition-all);
+        }
+        
+        .ixmrt-card:hover {
+            box-shadow: var(--ixmrt-shadow-md);
+            transform: translateY(-2px);
+        }
+        
+        .ixmrt-card-header {
+            padding: var(--ixmrt-space-6);
+            border-bottom: 1px solid var(--ixmrt-gray-100);
+        }
+        
+        .ixmrt-card-body {
+            padding: var(--ixmrt-space-6);
+        }
+        
+        .ixmrt-card-footer {
+            padding: var(--ixmrt-space-6);
+            border-top: 1px solid var(--ixmrt-gray-100);
+            background: var(--ixmrt-gray-50);
+        }
+        
+        /* Card Variants */
+        .ixmrt-card-elevated {
+            box-shadow: var(--ixmrt-shadow-lg);
+            border: none;
+        }
+        
+        .ixmrt-card-outlined {
+            border: 2px solid var(--ixmrt-primary-200);
+            box-shadow: none;
+        }
+        
+        /* === FORM COMPONENTS === */
+        .ixmrt-form-group {
+            margin-bottom: var(--ixmrt-space-4);
+        }
+        
+        .ixmrt-label {
+            display: block;
+            font-size: var(--ixmrt-text-sm);
+            font-weight: var(--ixmrt-font-medium);
+            color: var(--ixmrt-gray-700);
+            margin-bottom: var(--ixmrt-space-2);
+        }
+        
+        .ixmrt-input {
+            width: 100%;
+            padding: var(--ixmrt-space-3);
+            border: 2px solid var(--ixmrt-gray-300);
+            border-radius: var(--ixmrt-rounded-lg);
+            font-size: var(--ixmrt-text-base);
+            transition: var(--ixmrt-transition-colors);
+            background: white;
+        }
+        
+        .ixmrt-input:focus {
+            outline: none;
+            border-color: var(--ixmrt-primary-500);
+            box-shadow: 0 0 0 3px var(--ixmrt-primary-100);
+        }
+        
+        .ixmrt-input:invalid {
+            border-color: var(--ixmrt-error-500);
+        }
+        
+        .ixmrt-textarea {
+            resize: vertical;
+            min-height: 6rem;
+        }
+        
+        .ixmrt-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1.5em 1.5em;
+            padding-right: 2.5rem;
+        }
+        
+        /* === STATUS COMPONENTS === */
+        .ixmrt-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: var(--ixmrt-space-1) var(--ixmrt-space-3);
+            border-radius: var(--ixmrt-rounded-full);
+            font-size: var(--ixmrt-text-xs);
+            font-weight: var(--ixmrt-font-semibold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .ixmrt-badge-primary {
+            background: var(--ixmrt-primary-100);
+            color: var(--ixmrt-primary-800);
+        }
+        
+        .ixmrt-badge-success {
+            background: var(--ixmrt-success-100);
+            color: var(--ixmrt-success-800);
+        }
+        
+        .ixmrt-badge-warning {
+            background: var(--ixmrt-warning-100);
+            color: var(--ixmrt-warning-800);
+        }
+        
+        .ixmrt-badge-error {
+            background: var(--ixmrt-error-100);
+            color: var(--ixmrt-error-800);
+        }
+        
+        .ixmrt-badge-gray {
+            background: var(--ixmrt-gray-100);
+            color: var(--ixmrt-gray-800);
+        }
+        
+        /* === ALERT COMPONENTS === */
+        .ixmrt-alert {
+            padding: var(--ixmrt-space-4);
+            border-radius: var(--ixmrt-rounded-lg);
+            border-left: 4px solid;
+            background: white;
+            margin-bottom: var(--ixmrt-space-4);
+        }
+        
+        .ixmrt-alert-success {
+            border-color: var(--ixmrt-success-500);
+            background: var(--ixmrt-success-50);
+            color: var(--ixmrt-success-800);
+        }
+        
+        .ixmrt-alert-warning {
+            border-color: var(--ixmrt-warning-500);
+            background: var(--ixmrt-warning-50);
+            color: var(--ixmrt-warning-800);
+        }
+        
+        .ixmrt-alert-error {
+            border-color: var(--ixmrt-error-500);
+            background: var(--ixmrt-error-50);
+            color: var(--ixmrt-error-800);
+        }
+        
+        .ixmrt-alert-info {
+            border-color: var(--ixmrt-primary-500);
+            background: var(--ixmrt-primary-50);
+            color: var(--ixmrt-primary-800);
+        }
+        
+        /* === LAYOUT COMPONENTS === */
+        .ixmrt-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--ixmrt-space-4);
+        }
+        
+        .ixmrt-section {
+            padding: var(--ixmrt-space-16) 0;
+        }
+        
+        .ixmrt-grid {
+            display: grid;
+            gap: var(--ixmrt-space-6);
+        }
+        
+        .ixmrt-grid-cols-1 { grid-template-columns: repeat(1, 1fr); }
+        .ixmrt-grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .ixmrt-grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .ixmrt-grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+        
+        @media (max-width: 768px) {
+            .ixmrt-grid-cols-2,
+            .ixmrt-grid-cols-3,
+            .ixmrt-grid-cols-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .ixmrt-flex {
+            display: flex;
+        }
+        
+        .ixmrt-flex-col {
+            flex-direction: column;
+        }
+        
+        .ixmrt-items-center {
+            align-items: center;
+        }
+        
+        .ixmrt-justify-center {
+            justify-content: center;
+        }
+        
+        .ixmrt-justify-between {
+            justify-content: space-between;
+        }
+        
+        .ixmrt-gap-1 { gap: var(--ixmrt-space-1); }
+        .ixmrt-gap-2 { gap: var(--ixmrt-space-2); }
+        .ixmrt-gap-3 { gap: var(--ixmrt-space-3); }
+        .ixmrt-gap-4 { gap: var(--ixmrt-space-4); }
+        .ixmrt-gap-6 { gap: var(--ixmrt-space-6); }
+        .ixmrt-gap-8 { gap: var(--ixmrt-space-8); }
+        
+        /* === LOADING COMPONENTS === */
+        .ixmrt-loading {
+            display: inline-block;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid var(--ixmrt-gray-200);
+            border-radius: 50%;
+            border-top-color: var(--ixmrt-primary-600);
+            animation: ixmrt-spin 1s linear infinite;
+        }
+        
+        .ixmrt-loading-lg {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-width: 3px;
+        }
+        
+        @keyframes ixmrt-spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* === MODAL COMPONENTS === */
+        .ixmrt-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: var(--ixmrt-z-modal);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--ixmrt-transition-opacity);
+        }
+        
+        .ixmrt-modal-overlay.ixmrt-modal-open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .ixmrt-modal {
+            background: white;
+            border-radius: var(--ixmrt-rounded-xl);
+            box-shadow: var(--ixmrt-shadow-2xl);
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow: auto;
+            transform: scale(0.95);
+            transition: var(--ixmrt-transition-transform);
+        }
+        
+        .ixmrt-modal-overlay.ixmrt-modal-open .ixmrt-modal {
+            transform: scale(1);
+        }
+        
+        .ixmrt-modal-header {
+            padding: var(--ixmrt-space-6);
+            border-bottom: 1px solid var(--ixmrt-gray-200);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .ixmrt-modal-body {
+            padding: var(--ixmrt-space-6);
+        }
+        
+        .ixmrt-modal-footer {
+            padding: var(--ixmrt-space-6);
+            border-top: 1px solid var(--ixmrt-gray-200);
+            display: flex;
+            gap: var(--ixmrt-space-3);
+            justify-content: flex-end;
+        }
+        
+        .ixmrt-modal-close {
+            background: none;
+            border: none;
+            font-size: var(--ixmrt-text-xl);
+            color: var(--ixmrt-gray-400);
+            cursor: pointer;
+            padding: var(--ixmrt-space-1);
+            border-radius: var(--ixmrt-rounded);
+            transition: var(--ixmrt-transition-colors);
+        }
+        
+        .ixmrt-modal-close:hover {
+            color: var(--ixmrt-gray-600);
+            background: var(--ixmrt-gray-100);
+        }
+        
+        /* === SOLANA PAY SPECIFIC COMPONENTS === */
+        .ixmrt-solana-pay-modal .ixmrt-modal {
+            min-width: 400px;
+        }
+        
+        .ixmrt-qr-container {
+            text-align: center;
+            padding: var(--ixmrt-space-6);
+        }
+        
+        .ixmrt-qr-code {
+            background: white;
+            border: 8px solid white;
+            border-radius: var(--ixmrt-rounded-xl);
+            box-shadow: var(--ixmrt-shadow-lg);
+            margin: var(--ixmrt-space-4) auto;
+            display: inline-block;
+        }
+        
+        .ixmrt-payment-status {
+            display: flex;
+            align-items: center;
+            gap: var(--ixmrt-space-2);
+            padding: var(--ixmrt-space-3);
+            border-radius: var(--ixmrt-rounded-lg);
+            font-size: var(--ixmrt-text-sm);
+            font-weight: var(--ixmrt-font-medium);
+        }
+        
+        .ixmrt-payment-status.pending {
+            background: var(--ixmrt-warning-50);
+            color: var(--ixmrt-warning-800);
+        }
+        
+        .ixmrt-payment-status.confirmed {
+            background: var(--ixmrt-success-50);
+            color: var(--ixmrt-success-800);
+        }
+        
+        .ixmrt-payment-status.failed {
+            background: var(--ixmrt-error-50);
+            color: var(--ixmrt-error-800);
+        }
+        
+        /* === UTILITY CLASSES === */
+        .ixmrt-sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        .ixmrt-hidden { display: none !important; }
+        .ixmrt-block { display: block !important; }
+        .ixmrt-inline-block { display: inline-block !important; }
+        .ixmrt-flex { display: flex !important; }
+        .ixmrt-inline-flex { display: inline-flex !important; }
+        
+        /* Margin utilities */
+        .ixmrt-m-0 { margin: 0 !important; }
+        .ixmrt-m-2 { margin: var(--ixmrt-space-2) !important; }
+        .ixmrt-m-4 { margin: var(--ixmrt-space-4) !important; }
+        .ixmrt-mt-2 { margin-top: var(--ixmrt-space-2) !important; }
+        .ixmrt-mt-4 { margin-top: var(--ixmrt-space-4) !important; }
+        .ixmrt-mb-2 { margin-bottom: var(--ixmrt-space-2) !important; }
+        .ixmrt-mb-4 { margin-bottom: var(--ixmrt-space-4) !important; }
+        
+        /* Padding utilities */
+        .ixmrt-p-0 { padding: 0 !important; }
+        .ixmrt-p-2 { padding: var(--ixmrt-space-2) !important; }
+        .ixmrt-p-4 { padding: var(--ixmrt-space-4) !important; }
+        .ixmrt-p-6 { padding: var(--ixmrt-space-6) !important; }
+        
+        /* Text utilities */
+        .ixmrt-text-center { text-align: center !important; }
+        .ixmrt-text-left { text-align: left !important; }
+        .ixmrt-text-right { text-align: right !important; }
+        
+        .ixmrt-font-bold { font-weight: var(--ixmrt-font-bold) !important; }
+        .ixmrt-font-semibold { font-weight: var(--ixmrt-font-semibold) !important; }
+        .ixmrt-font-medium { font-weight: var(--ixmrt-font-medium) !important; }
+        
+        /* Color utilities */
+        .ixmrt-text-primary { color: var(--ixmrt-primary-600) !important; }
+        .ixmrt-text-success { color: var(--ixmrt-success-600) !important; }
+        .ixmrt-text-error { color: var(--ixmrt-error-600) !important; }
+        .ixmrt-text-gray { color: var(--ixmrt-gray-600) !important; }
+        
+        /* Responsive utilities */
+        @media (max-width: 640px) {
+            .ixmrt-hidden-mobile { display: none !important; }
+        }
+        
+        @media (min-width: 641px) {
+            .ixmrt-visible-mobile { display: none !important; }
+        }
+        
+        /* === DEMO STYLES === */
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--ixmrt-space-8);
+        }
+        
+        .demo-section {
+            margin-bottom: var(--ixmrt-space-16);
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--ixmrt-space-6);
+            margin-top: var(--ixmrt-space-8);
+        }
+        
+        .demo-card {
+            background: white;
+            padding: var(--ixmrt-space-6);
+            border-radius: var(--ixmrt-rounded-xl);
+            border: 1px solid var(--ixmrt-gray-200);
+        }
+        
+        .code-preview {
+            background: var(--ixmrt-gray-900);
+            color: var(--ixmrt-gray-100);
+            padding: var(--ixmrt-space-4);
+            border-radius: var(--ixmrt-rounded-lg);
+            font-family: var(--ixmrt-font-family-mono);
+            font-size: var(--ixmrt-text-sm);
+            overflow-x: auto;
+            margin-top: var(--ixmrt-space-4);
+        }
+    </style>
+    
+    <!-- Solana Pay QR Code Generator -->
+    <script src="https://unpkg.com/qrcode@1.5.3/build/qrcode.min.js"></script>
+    <!-- Solana Web3.js -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Header -->
+        <header class="demo-section">
+            <h1 class="ixmrt-heading-1">IXMRT Design System</h1>
+            <p class="ixmrt-body-large">Comprehensive component library for the iOS device engineering platform</p>
+        </header>
+        
+        <!-- Typography Section -->
+        <section class="demo-section">
+            <h2 class="ixmrt-heading-2">Typography</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h1 class="ixmrt-heading-1">Heading 1</h1>
+                    <h2 class="ixmrt-heading-2">Heading 2</h2>
+                    <h3 class="ixmrt-heading-3">Heading 3</h3>
+                    <h4 class="ixmrt-heading-4">Heading 4</h4>
+                    <p class="ixmrt-body-large">Large body text for important content</p>
+                    <p class="ixmrt-body">Regular body text for standard content</p>
+                    <p class="ixmrt-body-small">Small body text for supporting information</p>
+                    <p class="ixmrt-caption">Caption text for labels and metadata</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Buttons Section -->
+        <section class="demo-section">
+            <h2 class="ixmrt-heading-2">Button Components</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3 class="ixmrt-heading-4">Primary Buttons</h3>
+                    <div class="ixmrt-flex ixmrt-flex-col ixmrt-gap-3">
+                        <button class="ixmrt-btn ixmrt-btn-primary ixmrt-btn-sm">Small Button</button>
+                        <button class="ixmrt-btn ixmrt-btn-primary ixmrt-btn-md">Medium Button</button>
+                        <button class="ixmrt-btn ixmrt-btn-primary ixmrt-btn-lg">Large Button</button>
+                        <button class="ixmrt-btn ixmrt-btn-primary ixmrt-btn-xl">Extra Large</button>
+                    </div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3 class="ixmrt-heading-4">Button Variants</h3>
+                    <div class="ixmrt-flex ixmrt-flex-col ixmrt-gap-3">
+                        <button class="ixmrt-btn ixmrt-btn-primary ixmrt-btn-md">Primary</button>
+                        <button class="ixmrt-btn ixmrt-btn-secondary ixmrt-btn-md">Secondary</button>
+                        <button class="ixmrt-btn ixmrt-btn-success ixmrt-btn-md">Success</button>
+                        <button class="ixmrt-btn ixmrt-btn-danger ixmrt-btn-md">Danger</button>
+                        <button class="ixmrt-btn ixmrt-btn-outline ixmrt-btn-md">Outline</button>
+                        <button class="ixmrt-btn ixmrt-btn-ghost ixmrt-btn-md">Ghost</button>
+                    </div>
+                </div>
+                
+                <div class="demo-card">
+                    <h3 class="ixmrt-heading-4">Solana Pay Integration</h3>
+                    <div class="ixmrt-flex ixmrt-flex-col ixmrt-gap-3">
+                        <button class="ixmrt-btn ixmrt-btn-solana ixmrt-btn-lg ixmrt-btn-full" onclick="initiateSolanaPayment('apprenticeship', 0.5)">
+                            <span>💰</span>
+                            Pay with Solana (0.5 SOL)
+                        </button>
+                        <button class="ixmrt-btn ixmrt-btn-solana ixmrt-btn-md" onclick="initiateSolanaPayment('repair', 0.1)">
+                            <span>🔧</span>
+                            Pay for Repair (0.1 SOL)
+                        </button>
+                        <button class="ixmrt-btn ixmrt-btn-solana ixmrt-btn-md" onclick="initiateSolanaPayment('swap', 0.05)">
+                            <span>🔄</span>
+                            Escrow for Swap (0.05 SOL)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Cards Section -->
+        <section class="demo-section">
+            <h2 class="ixmrt-heading-2">Card Components</h2>
+            <div class="demo-grid">
+                <div class="ixmrt-card">
+                    <div class="ixmrt-card-header">
+                        <h3 class="ixmrt-heading-4 ixmrt-m-0">Standard Card</h3>
+                    </div>
+                    <div class="ixmrt-card-body">
+                        <p class="ixmrt-body">This is a standard card with header, body, and footer sections.</p>
+                    </div>
+                    <div class="ixmrt-card-footer">
+                        <button class="ixmrt-btn ixmrt-btn-primary ixmrt-btn-sm">Action</button>
+                    </div>
+                </div>
+                
+                <div class="ixmrt-card ixmrt-card-elevated">
+                    <div class="ixmrt-card-body">
+                        <h3 class="ixmrt-heading-4">Elevated Card</h3>
+                        <p class="ixmrt-body">Cards with enhanced shadow for emphasis.</p>
+                        <div class="ixmrt-flex ixmrt-gap-2 ixmrt-mt-4">
+                            <span class="ixmrt-badge ixmrt-badge-primary">iOS Repair</span>
+                            <span class="ixmrt-badge ixmrt-badge-success">Verified</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ixmrt-card ixmrt-card-outlined">
+                    <div class="ixmrt-card-body">
+                        <h3 class="ixmrt-heading-4">Outlined Card</h3>
+                        <p class="ixmrt-body">Cards with prominent borders for special content.</p>
+                        <div class="ixmrt-alert ixmrt-alert-info ixmrt-mt-4 ixmrt-mb-2">
+                            <strong>Info:</strong> This is an informational alert inside a card.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Form Components -->
+        <section class="demo-section">
+            <h2 class="ixmrt-heading-2">Form Components</h2>
+            <div class="demo-grid">
+                <div class="demo-card">
+                    <h3 class="ixmrt-heading-4">Form Elements</h3>
+                    <form>
+                        <div class="ixmrt-form-group">
+                            <label class="ixmrt-label" for="name">Name</label>
+                            <input class="ixmrt-input" type="text" id="name" placeholder="Enter your name">
+                        </div>
+                        
+                        <div class="ixmrt-form-group">
+                            <label class="ixmrt-label" for="service">Service Type</label>
+                            <select class="ixmrt-input ixmrt-select" id="service">
+                                <option>iPhone Screen Repair</option>
+                                <option>Battery Replacement</option>
+                                <option>Water Damage Recovery</option>
+                                <option>Logic Board Repair</option>
+                            </select>
+                        </div>
+                        
+                        <div class="ixmrt-form-group">
+                            <label class="ixmrt-label" for="description">Description</label>
+                            <textarea class="ixmrt-input ixmrt-textarea" id="description" placeholder="Describe the issue..."></textarea>
+                        </div>
+                        
+                        <button class="ixmrt-btn ixmrt-btn-primary ixmrt-btn-md ixmrt-btn-full" type="submit">
+                            Submit Request
+                        </button>
+                    </form>
+                </div>
+                
+                <div class="demo-card">
+                    <h3 class="ixmrt-heading-4">Status Components</h3>
+                    <div class="ixmrt-flex ixmrt-flex-col ixmrt-gap-3">
+                        <div>
+                            <h4 class="ixmrt-body ixmrt-font-semibold ixmrt-mb-2">Badges</h4>
+                            <div class="ixmrt-flex ixmrt-gap-2">
+                                <span class="ixmrt-badge ixmrt-badge-primary">Primary</span>
+                                <span class="ixmrt-badge ixmrt-badge-success">Success</span>
+                                <span class="ixmrt-badge ixmrt-badge-warning">Warning</span>
+                                <span class="ixmrt-badge ixmrt-badge-error">Error</span>
+                                <span class="ixmrt-badge ixmrt-badge-gray">Gray</span>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <h4 class="ixmrt-body ixmrt-font-semibold ixmrt-mb-2">Alerts</h4>
+                            <div class="ixmrt-alert ixmrt-alert-success">
+                                <strong>Success!</strong> Your payment has been confirmed.
+                            </div>
+                            <div class="ixmrt-alert ixmrt-alert-warning">
+                                <strong>Warning:</strong> KYC verification required.
+                            </div>
+                            <div class="ixmrt-alert ixmrt-alert-error">
+                                <strong>Error:</strong> Transaction failed. Please try again.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Solana Pay Demo Section -->
+        <section class="demo-section">
+            <h2 class="ixmrt-heading-2">Solana Pay Integration Demo</h2>
+            <div class="ixmrt-card ixmrt-card-elevated">
+                <div class="ixmrt-card-header">
+                    <h3 class="ixmrt-heading-3 ixmrt-m-0">Test Solana Payments</h3>
+                    <p class="ixmrt-body-small ixmrt-text-gray">Connect your wallet and try test transactions</p>
+                </div>
+                <div class="ixmrt-card-body">
+                    <div id="wallet-connection" class="ixmrt-mb-4">
+                        <button id="connect-wallet-btn" class="ixmrt-btn ixmrt-btn-solana ixmrt-btn-lg" onclick="connectWallet()">
+                            Connect Solana Wallet
+                        </button>
+                        <div id="wallet-info" class="ixmrt-hidden ixmrt-mt-4">
+                            <div class="ixmrt-alert ixmrt-alert-success">
+                                <strong>Wallet Connected:</strong> <span id="wallet-address"></span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ixmrt-grid ixmrt-grid-cols-3">
+                        <div class="demo-card">
+                            <h4 class="ixmrt-heading-4">Apprenticeship Payment</h4>
+                            <p class="ixmrt-body-small ixmrt-mb-4">6-month iOS repair training program</p>
+                            <div class="ixmrt-text-center ixmrt-mb-4">
+                                <span class="ixmrt-text-2xl ixmrt-font-bold ixmrt-text-primary">0.5 SOL</span>
+                            </div>
+                            <button class="ixmrt-btn ixmrt-btn-solana ixmrt-btn-md ixmrt-btn-full" onclick="initiateSolanaPayment('apprenticeship', 0.5)">
+                                Pay for Training
+                            </button>
+                        </div>
+                        
+                        <div class="demo-card">
+                            <h4 class="ixmrt-heading-4">Repair Service</h4>
+                            <p class="ixmrt-body-small ixmrt-mb-4">iPhone screen repair service</p>
+                            <div class="ixmrt-text-center ixmrt-mb-4">
+                                <span class="ixmrt-text-2xl ixmrt-font-bold ixmrt-text-primary">0.1 SOL</span>
+                            </div>
+                            <button class="ixmrt-btn ixmrt-btn-solana ixmrt-btn-md ixmrt-btn-full" onclick="initiateSolanaPayment('repair', 0.1)">
+                                Pay for Repair
+                            </button>
+                        </div>
+                        
+                        <div class="demo-card">
+                            <h4 class="ixmrt-heading-4">Device Swap Escrow</h4>
+                            <p class="ixmrt-body-small ixmrt-mb-4">Secure device exchange</p>
+                            <div class="ixmrt-text-center ixmrt-mb-4">
+                                <span class="ixmrt-text-2xl ixmrt-font-bold ixmrt-text-primary">0.05 SOL</span>
+                            </div>
+                            <button class="ixmrt-btn ixmrt-btn-solana ixmrt-btn-md ixmrt-btn-full" onclick="initiateSolanaPayment('swap', 0.05)">
+                                Create Escrow
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Solana Pay Modal -->
+    <div id="solana-pay-modal" class="ixmrt-modal-overlay ixmrt-solana-pay-modal">
+        <div class="ixmrt-modal">
+            <div class="ixmrt-modal-header">
+                <h3 class="ixmrt-heading-4 ixmrt-m-0">Solana Pay</h3>
+                <button class="ixmrt-modal-close" onclick="closeSolanaPayModal()">✕</button>
+            </div>
+            <div class="ixmrt-modal-body">
+                <div class="ixmrt-qr-container">
+                    <div id="payment-details" class="ixmrt-mb-4">
+                        <h4 id="payment-title" class="ixmrt-heading-4 ixmrt-text-center"></h4>
+                        <div class="ixmrt-text-center">
+                            <span id="payment-amount" class="ixmrt-text-3xl ixmrt-font-bold ixmrt-text-primary"></span>
+                        </div>
+                    </div>
+                    
+                    <div id="qr-code-container" class="ixmrt-qr-code"></div>
+                    
+                    <div id="payment-status" class="ixmrt-payment-status pending ixmrt-mt-4">
+                        <span class="ixmrt-loading"></span>
+                        <span>Waiting for payment confirmation...</span>
+                    </div>
+                    
+                    <div class="ixmrt-mt-4 ixmrt-text-center">
+                        <p class="ixmrt-body-small ixmrt-text-gray">
+                            Scan with Phantom, Solflare, or any Solana Pay compatible wallet
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="ixmrt-modal-footer">
+                <button class="ixmrt-btn ixmrt-btn-secondary ixmrt-btn-md" onclick="closeSolanaPayModal()">
+                    Cancel
+                </button>
+                <button id="copy-address-btn" class="ixmrt-btn ixmrt-btn-primary ixmrt-btn-md" onclick="copyRecipientAddress()">
+                    Copy Address
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Solana Pay Integration
+        const RECIPIENT_ADDRESS = 'HN7cABqLq46Es1jh92dQQisAq662SmxELLLsHHe4YWrH'; // Test wallet address
+        const RPC_ENDPOINT = 'https://api.devnet.solana.com';
+        
+        let connection = null;
+        let wallet = null;
+        let currentPaymentSignature = null;
+        
+        // Initialize Solana connection
+        if (typeof solanaWeb3 !== 'undefined') {
+            connection = new solanaWeb3.Connection(RPC_ENDPOINT, 'confirmed');
+        }
+        
+        // Wallet connection
+        async function connectWallet() {
+            try {
+                // Check if Phantom wallet is installed
+                if (window.solana && window.solana.isPhantom) {
+                    const response = await window.solana.connect();
+                    wallet = window.solana;
+                    
+                    document.getElementById('connect-wallet-btn').classList.add('ixmrt-hidden');
+                    document.getElementById('wallet-info').classList.remove('ixmrt-hidden');
+                    document.getElementById('wallet-address').textContent = 
+                        response.publicKey.toString().substring(0, 8) + '...' + 
+                        response.publicKey.toString().substring(-8);
+                    
+                    showAlert('success', 'Wallet connected successfully!');
+                } else {
+                    showAlert('warning', 'Phantom wallet not found. Please install Phantom wallet extension.');
+                    // Fallback - show QR code anyway for testing
+                }
+            } catch (error) {
+                console.error('Wallet connection failed:', error);
+                showAlert('error', 'Failed to connect wallet. Please try again.');
+            }
+        }
+        
+        // Initiate Solana payment
+        async function initiateSolanaPayment(type, amount) {
+            const paymentTypes = {
+                'apprenticeship': 'Apprenticeship Program',
+                'repair': 'iPhone Repair Service', 
+                'swap': 'Device Swap Escrow'
+            };
+            
+            const title = paymentTypes[type] || 'Payment';
+            
+            // Show payment modal
+            document.getElementById('payment-title').textContent = title;
+            document.getElementById('payment-amount').textContent = `${amount} SOL`;
+            document.getElementById('solana-pay-modal').classList.add('ixmrt-modal-open');
+            
+            // Generate Solana Pay URL
+            const solanaPayUrl = createSolanaPayUrl(amount, type);
+            
+            // Generate QR code
+            const qrContainer = document.getElementById('qr-code-container');
+            qrContainer.innerHTML = '';
+            
+            try {
+                await QRCode.toCanvas(qrContainer, solanaPayUrl, {
+                    width: 200,
+                    margin: 1,
+                    color: {
+                        dark: '#000000',
+                        light: '#FFFFFF'
+                    }
+                });
+                
+                // Start monitoring for payment
+                monitorPayment(amount, type);
+                
+            } catch (error) {
+                console.error('QR code generation failed:', error);
+                showAlert('error', 'Failed to generate QR code');
+            }
+        }
+        
+        // Create Solana Pay URL
+        function createSolanaPayUrl(amount, reference) {
+            const params = new URLSearchParams({
+                recipient: RECIPIENT_ADDRESS,
+                amount: amount.toString(),
+                reference: generateReference(reference),
+                label: 'IXMRT Payment',
+                message: `Payment for ${reference}`
+            });
+            
+            return `solana:${RECIPIENT_ADDRESS}?${params.toString()}`;
+        }
+        
+        // Generate unique reference for payment tracking
+        function generateReference(type) {
+            const timestamp = Date.now();
+            const random = Math.random().toString(36).substring(2, 8);
+            return `ixmrt-${type}-${timestamp}-${random}`;
+        }
+        
+        // Monitor payment status
+        async function monitorPayment(amount, type) {
+            const statusElement = document.getElementById('payment-status');
+            let attempts = 0;
+            const maxAttempts = 60; // Monitor for 5 minutes
+            
+            const checkPayment = async () => {
+                try {
+                    attempts++;
+                    
+                    // In a real implementation, you would:
+                    // 1. Query the blockchain for transactions to the recipient address
+                    // 2. Check for transactions matching the amount and reference
+                    // 3. Verify transaction confirmation status
+                    
+                    // For demo purposes, simulate payment confirmation after 10 seconds
+                    if (attempts > 10) {
+                        // Simulate successful payment
+                        statusElement.className = 'ixmrt-payment-status confirmed';
+                        statusElement.innerHTML = '<span>✅</span><span>Payment confirmed!</span>';
+                        
+                        // Handle successful payment
+                        handlePaymentSuccess(type, amount);
+                        return;
+                    }
+                    
+                    // Continue monitoring
+                    if (attempts < maxAttempts) {
+                        setTimeout(checkPayment, 5000); // Check every 5 seconds
+                    } else {
+                        // Timeout
+                        statusElement.className = 'ixmrt-payment-status failed';
+                        statusElement.innerHTML = '<span>❌</span><span>Payment timeout. Please try again.</span>';
+                    }
+                    
+                } catch (error) {
+                    console.error('Payment monitoring error:', error);
+                    statusElement.className = 'ixmrt-payment-status failed';
+                    statusElement.innerHTML = '<span>❌</span><span>Error monitoring payment</span>';
+                }
+            };
+            
+            // Start monitoring
+            setTimeout(checkPayment, 5000);
+        }
+        
+        // Handle successful payment
+        function handlePaymentSuccess(type, amount) {
+            setTimeout(() => {
+                closeSolanaPayModal();
+                
+                const messages = {
+                    'apprenticeship': 'Congratulations! Your apprenticeship program payment has been confirmed. You will receive enrollment details via email.',
+                    'repair': 'Payment confirmed! Your iPhone repair service has been scheduled. A technician will contact you shortly.',
+                    'swap': 'Escrow created successfully! Your device swap is now secured on the blockchain.'
+                };
+                
+                showAlert('success', messages[type] || 'Payment confirmed successfully!');
+                
+                // In a real implementation, you would:
+                // 1. Update the database with payment confirmation
+                // 2. Trigger relevant business logic (enrollment, scheduling, etc.)
+                // 3. Send confirmation emails
+                // 4. Update UI state
+                
+            }, 2000);
+        }
+        
+        // Close Solana Pay modal
+        function closeSolanaPayModal() {
+            document.getElementById('solana-pay-modal').classList.remove('ixmrt-modal-open');
+            
+            // Reset modal state
+            setTimeout(() => {
+                const statusElement = document.getElementById('payment-status');
+                statusElement.className = 'ixmrt-payment-status pending';
+                statusElement.innerHTML = '<span class="ixmrt-loading"></span><span>Waiting for payment confirmation...</span>';
+            }, 300);
+        }
+        
+        // Copy recipient address to clipboard
+        function copyRecipientAddress() {
+            navigator.clipboard.writeText(RECIPIENT_ADDRESS).then(() => {
+                showAlert('success', 'Recipient address copied to clipboard!');
+            }).catch(() => {
+                showAlert('error', 'Failed to copy address');
+            });
+        }
+        
+        // Utility function to show alerts
+        function showAlert(type, message) {
+            const alert = document.createElement('div');
+            alert.className = `ixmrt-alert ixmrt-alert-${type}`;
+            alert.style.position = 'fixed';
+            alert.style.top = '20px';
+            alert.style.right = '20px';
+            alert.style.zIndex = '9999';
+            alert.style.minWidth = '300px';
+            alert.innerHTML = `<strong>${type.charAt(0).toUpperCase() + type.slice(1)}:</strong> ${message}`;
+            
+            document.body.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+        }
+        
+        // Real Solana blockchain integration functions
+        async function createEscrowTransaction(amount, apprenticeKey, agentKey, escrowType) {
+            if (!connection || !wallet) {
+                throw new Error('Wallet not connected');
+            }
+            
+            try {
+                // Create transaction instruction for escrow creation
+                const transaction = new solanaWeb3.Transaction();
+                
+                // Add instruction to create escrow account
+                // This would use the actual smart contract program ID and instruction data
+                const createEscrowInstruction = new solanaWeb3.TransactionInstruction({
+                    keys: [
+                        { pubkey: wallet.publicKey, isSigner: true, isWritable: true },
+                        { pubkey: new solanaWeb3.PublicKey(apprenticeKey), isSigner: false, isWritable: false },
+                        { pubkey: new solanaWeb3.PublicKey(agentKey), isSigner: false, isWritable: false },
+                        // Add other required accounts
+                    ],
+                    programId: new solanaWeb3.PublicKey('11111111111111111111111111111112'), // Replace with actual program ID
+                    data: Buffer.from([]) // Add instruction data
+                });
+                
+                transaction.add(createEscrowInstruction);
+                
+                // Get recent blockhash
+                const { blockhash } = await connection.getRecentBlockhash();
+                transaction.recentBlockhash = blockhash;
+                transaction.feePayer = wallet.publicKey;
+                
+                // Sign and send transaction
+                const signed = await wallet.signTransaction(transaction);
+                const signature = await connection.sendRawTransaction(signed.serialize());
+                
+                // Confirm transaction
+                await connection.confirmTransaction(signature);
+                
+                return signature;
+                
+            } catch (error) {
+                console.error('Escrow transaction failed:', error);
+                throw error;
+            }
+        }
+        
+        // Demo: Simulate real blockchain query
+        async function queryEscrowStatus(escrowAddress) {
+            try {
+                // In real implementation, this would query the actual escrow account
+                const accountInfo = await connection.getAccountInfo(
+                    new solanaWeb3.PublicKey(escrowAddress)
+                );
+                
+                if (accountInfo) {
+                    // Parse account data to get escrow status
+                    // This depends on your smart contract's data layout
+                    return {
+                        status: 'active',
+                        amount: 0.5,
+                        apprentice: 'HN7c...YWrH',
+                        agent: 'ABC1...XYZ9',
+                        createdAt: Date.now()
+                    };
+                }
+                
+                return null;
+                
+            } catch (error) {
+                console.error('Failed to query escrow:', error);
+                return null;
+            }
+        }
+        
+        // Initialize demo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check for Phantom wallet on page load
+            if (window.solana && window.solana.isPhantom) {
+                // Auto-connect if previously connected
+                window.solana.connect({ onlyIfTrusted: true }).then((response) => {
+                    if (response.publicKey) {
+                        wallet = window.solana;
+                        document.getElementById('connect-wallet-btn').classList.add('ixmrt-hidden');
+                        document.getElementById('wallet-info').classList.remove('ixmrt-hidden');
+                        document.getElementById('wallet-address').textContent = 
+                            response.publicKey.toString().substring(0, 8) + '...' + 
+                            response.publicKey.toString().substring(-8);
+                    }
+                }).catch(() => {
+                    // User hasn't given permission yet
+                });
+            }
+            
+            // Demo alert
+            setTimeout(() => {
+                showAlert('info', 'This is a demo of the IXMRT design system with working Solana Pay integration. Connect your wallet to test payments on Solana Devnet.');
+            }, 1000);
+        });
+        
+        // Handle wallet disconnection
+        if (window.solana) {
+            window.solana.on('disconnect', () => {
+                wallet = null;
+                document.getElementById('connect-wallet-btn').classList.remove('ixmrt-hidden');
+                document.getElementById('wallet-info').classList.add('ixmrt-hidden');
+                showAlert('warning', 'Wallet disconnected');
+            });
+        }
+        
+        // Export design system for use in other applications
+        window.IXMRTDesignSystem = {
+            // Utility functions
+            showAlert,
+            createSolanaPayUrl,
+            connectWallet,
+            initiateSolanaPayment,
+            
+            // Blockchain functions
+            createEscrowTransaction,
+            queryEscrowStatus,
+            
+            // Constants
+            RECIPIENT_ADDRESS,
+            RPC_ENDPOINT
+        };
+    </script>
+</body>
+</html>
